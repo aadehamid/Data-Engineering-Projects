@@ -31,20 +31,19 @@ user_table_create = """
 create table if not exists users (user_id int, first_name varchar, last_name varchar, gender char, level varchar, primary key (user_id))
 """
 
-songplay_table_create = """
-create table if not exists songplays (songplay_id serial primary key, start_time timestamp not null references time(start_time),
-user_id int not null references users(user_id), level varchar not null, song_id varchar references songs(song_id), artist_id varchar references artists(artist_id), session_id varchar not null, location varchar, user_agent varchar not null);
-"""
-
-
-
 artist_table_create = """
 create table if not exists artists (artist_id varchar, name varchar not null, location varchar , latitude float ,
 longtitude float, primary key (artist_id) );
 """
 
+
 song_table_create = """
 create table if not exists songs (song_id varchar primary key, title varchar not null, artist_id varchar references artists(artist_id), year int, duration float not null);
+"""
+
+songplay_table_create = """
+create table if not exists songplays (songplay_id serial primary key, start_time timestamp not null references time(start_time),
+user_id int not null references users(user_id), level varchar not null, song_id varchar references songs(song_id), artist_id varchar references artists(artist_id), session_id varchar not null, location varchar, user_agent varchar not null);
 """
 
 # INSERT RECORDS
@@ -86,5 +85,6 @@ song_select = ("""
 
 # QUERY LISTS
 
-create_table_queries = [time_table_create, user_table_create, songplay_table_create, artist_table_create, song_table_create]
+create_table_queries = [time_table_create, user_table_create, artist_table_create, song_table_create, songplay_table_create]
+
 drop_table_queries = [songplay_table_drop, user_table_drop, song_table_drop, artist_table_drop, time_table_drop]
