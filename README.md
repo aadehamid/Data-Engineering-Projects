@@ -1,3 +1,9 @@
+
+# IMPORTANT NOTICE
+ 1. Please, replace all connection strings in create.py, etl.py,  etl.ipynb, and test.ipynb with your connection strings.
+
+2. Replace the usernames with your Postgresql username, especially in the test.ipynb connection string.
+
 # Business Problem
 Sparkify is looking for an efficient way to understand its users' listening habits from JSON logs of user activity.
 
