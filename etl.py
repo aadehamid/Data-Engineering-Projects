@@ -135,7 +135,7 @@ def main():
     dbname="sparkifydb",
     password="password",
     user="aadehamid",
-    host="172.18.0.3",
+    host= "172.19.0.2",
     port="5432")
     conn.set_session(autocommit=True)
     cur = conn.cursor()
