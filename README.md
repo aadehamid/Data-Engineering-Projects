@@ -2,7 +2,9 @@
 # IMPORTANT NOTICE
  1. Please, replace all connection strings in create.py, etl.py,  etl.ipynb, and test.ipynb with your connection strings.
 
-2. Replace the usernames with your Postgresql username, especially in the test.ipynb connection string.
+ 2. The name of my default PostgreSQL DB is default_db. You can supply your default DB in the docker-compose file.
+
+3. Replace the usernames with your Postgresql username, especially in the test.ipynb connection string.
 
 # Business Problem
 Sparkify is looking for an efficient way to understand its users' listening habits from JSON logs of user activity.
