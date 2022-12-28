@@ -49,9 +49,7 @@ services:
       - seed_node
 
     volumes:
-      - ./python_postgres/python_scripts:/hamidadesokan/src
-      - ./cassandra/python_scripts:/hamidadesokan/src
-      - ./project_postgres_songs:/hamidadesokan/src
+      - .:/hamidadesokan/src
 
 
 volumes:
