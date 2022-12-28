@@ -18,7 +18,7 @@ drop table if exists time;
 
 # CREATE TABLES
 time_table_create = """
-create table if not exists time (start_time timestamp not null primary key,
+create table if not exists time (start_time timestamp primary key,
 hour INT NOT NULL CHECK (hour >= 0),
 day INT NOT NULL CHECK (day >= 0),
 week INT NOT NULL CHECK (week >= 0),
@@ -55,7 +55,8 @@ songplay_table_insert = ("""
 
 
 user_table_insert = ("""
-                     insert into users (user_id, first_name, last_name, gender, level) values(%s, %s, %s, %s, %s) ON CONFLICT DO NOTHING
+                     insert into users (user_id, first_name, last_name, gender, level) values(%s, %s, %s, %s, %s) ON CONFLICT (user_id)
+                     DO UPDATE SET level = EXCLUDED.level
 """)
 
 song_table_insert = """
