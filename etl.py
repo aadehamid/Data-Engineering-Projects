@@ -10,9 +10,6 @@ from psycopg2.extensions import register_adapter, AsIs
 from utility import  addapt_numpy_array, addapt_numpy_float64, addapt_numpy_int64, addapt_numpy_float32, addapt_numpy_int32
 
 """The following register lines register the numpy data types with psycopg2 to avoid the error: "TypeError: can't adapt type <numpy data type>"
-
-only run this cell if you are running the script locally
-running on Udacity workspace, these lines are not needed
 """
 register_adapter(np.ndarray, addapt_numpy_array)
 register_adapter(np.float64, addapt_numpy_float64)
@@ -133,11 +130,12 @@ def main():
 
     # connect to sparkify database on local computer
     # The connection here is to my local docker container running postgres
+
     conn = psycopg2.connect(
     dbname="sparkifydb",
     password="password",
     user="aadehamid",
-    host="172.22.0.3",
+    host="172.18.0.3",
     port="5432")
     conn.set_session(autocommit=True)
     cur = conn.cursor()

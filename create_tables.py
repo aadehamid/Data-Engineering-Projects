@@ -8,14 +8,16 @@ def create_database():
     """
     - Creates and connects to the sparkifydb
     - Returns the connection and cursor to sparkifydb
+    - The connection strings below are for my docker container
+    - you will need to replace all connection string with your own for your docker container or localhost for this to work
     """
 
     # connect to default database
     conn = psycopg2.connect(
-    dbname="udacity",
+    dbname="default_db",
     password="password",
     user="aadehamid",
-    host="172.22.0.3",
+    host="172.18.0.3",
     port="5432")
     conn.set_session(autocommit=True)
     cur = conn.cursor()
@@ -32,7 +34,7 @@ def create_database():
     dbname="sparkifydb",
     password="password",
     user="aadehamid",
-    host="172.22.0.3",
+    host="172.18.0.3",
     port="5432")
     conn.set_session(autocommit=True)
     cur = conn.cursor()
