@@ -28,7 +28,7 @@ weekday varchar not null);
 """
 
 user_table_create = """
-create table if not exists users (user_id int not null, first_name varchar, last_name varchar, gender char, level varchar, primary key (user_id))
+create table if not exists users (user_id int, first_name varchar, last_name varchar, gender char, level varchar, primary key (user_id))
 """
 
 songplay_table_create = """
