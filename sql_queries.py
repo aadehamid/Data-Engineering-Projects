@@ -38,12 +38,12 @@ longtitude float, primary key (artist_id) );
 
 
 song_table_create = """
-create table if not exists songs (song_id varchar primary key, title varchar not null, artist_id varchar references artists(artist_id), year int, duration float not null);
+create table if not exists songs (song_id varchar primary key, title varchar not null, artist_id varchar, year int, duration float not null);
 """
 
 songplay_table_create = """
 create table if not exists songplays (songplay_id serial primary key, start_time timestamp not null references time(start_time),
-user_id int not null references users(user_id), level varchar not null, song_id varchar references songs(song_id), artist_id varchar references artists(artist_id), session_id varchar not null, location varchar, user_agent varchar not null);
+user_id int not null references users(user_id), level varchar not null, song_id varchar, artist_id varchar , session_id varchar not null, location varchar, user_agent varchar not null);
 """
 
 # INSERT RECORDS
