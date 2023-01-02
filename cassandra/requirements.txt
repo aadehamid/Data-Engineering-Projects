@@ -1,0 +1,26 @@
+black
+flake8
+ipython
+pylint
+pytest
+yapf
+numpy
+pandas
+spyql
+matplotcli
+ipython-sql
+cassandra-driver
+ipyparallel
+# duckdb==0.6.1
+polars
+pyspark
+plotly
+dash
+# libarries to review
+python-benedict
+fugue-jupyter
+fugue[sql]
+lineapy
+# %pip install -q whylogs
+whylogs[viz]
+# --------------------

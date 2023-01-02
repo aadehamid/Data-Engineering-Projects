@@ -1,5 +1,8 @@
 # vscode
 .vscode
+# misc folders
+python_postgres/
+reservation-service/
 
 # MAC
 .DS_Store
