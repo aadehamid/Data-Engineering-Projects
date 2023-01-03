@@ -1,6 +1,6 @@
 {
     "name": "Postgresql DB",
-    "dockerComposeFile": "../../.devcontainer/postgresql/docker-compose.dev-container.yml",
+    "dockerComposeFile": "./docker-compose.dev-container.yml",
     "service": "postgres_jupyter",
     "runServices": ["posgresql_db"],
     "shutdownAction": "stopCompose",
