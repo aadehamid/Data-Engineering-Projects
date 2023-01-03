@@ -1,6 +1,6 @@
 FROM jupyter/base-notebook
 WORKDIR /src/notebooks
-COPY /workspaces/Data-Engineering-Projects/.devcontainer/postgresql/requirements.txt .
+COPY ./requirements.txt .
 # COPY requirements.txt .
 RUN python3 -m pip install -r requirements.txt && \
     conda install -c anaconda psycopg2 && \

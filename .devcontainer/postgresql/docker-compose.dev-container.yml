@@ -15,8 +15,8 @@ services:
 
   postgres_jupyter:
     build:
-      context: ../../
-      dockerfile: .devcontainer/postgresql/Dockerfile.dev
+      context: .
+      dockerfile: Dockerfile.dev
     container_name: jupyter
     ports:
       - "8888:8888"
