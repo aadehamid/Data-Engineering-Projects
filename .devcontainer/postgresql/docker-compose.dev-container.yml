@@ -15,7 +15,7 @@ services:
 
   postgres_jupyter:
     build:
-      context: /workspaces/Data-Engineering-Projects
+      context: ../../
       dockerfile: .devcontainer/postgresql/Dockerfile.dev
     container_name: jupyter
     ports:
@@ -25,7 +25,7 @@ services:
 
     volumes:
       # - ../../:/hamidadesokan/src
-      - /workspaces/Data-Engineering-Projects:/hamidadesokan/src
+      - ../../:/hamidadesokan/src
       - vscode-extensions:/root/.vscode-server/extensions
 
     command: sleep infinity
