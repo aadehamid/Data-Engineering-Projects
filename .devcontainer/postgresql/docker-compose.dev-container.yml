@@ -14,7 +14,9 @@ services:
 
 
   postgres_jupyter:
-    build: .
+    build:
+    context: .
+    dockerfile: Dockerfile.dev
     container_name: jupyter
     ports:
       - "8888:8888"
@@ -22,6 +24,10 @@ services:
       - posgresql_db
 
     volumes:
-      - ../../postgresql/:/hamidadesokan/src
+      - ../../:/hamidadesokan/src
+      - vscode-extensions:/root/.vscode-server/extensions
+
+    command: sleep infinity
 volumes:
   pgdata:
+  vscode-extensions:
