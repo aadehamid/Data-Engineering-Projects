@@ -1,11 +1,11 @@
 {
     "name": "Postgresql DB",
-    "dockerComposeFile": "/workspaces/Data-Engineering-Projects/.devcontainer/postgresql/docker-compose.dev-container.yml",
+    "dockerComposeFile": ".devcontainer/postgresql/docker-compose.dev-container.yml",
     "service": "postgres_jupyter",
     "runServices": ["posgresql_db"],
     "shutdownAction": "stopCompose",
     /* Open the sub-folder with the source code */
-    "workspaceFolder": "/hamidadesokan/src",
+    "workspaceFolder": "/workspaces/Data-Engineering-Projects",
     /* Set *default* container specific settings.json values on container create. */
     "settings": {
       "#terminal.integrated.defaultProfile.linux#": "/bin/bash"},
