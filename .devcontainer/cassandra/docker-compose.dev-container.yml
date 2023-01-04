@@ -1,0 +1,32 @@
+services:
+  cassandra:
+    image: cassandra
+    container_name: cassandra_db
+
+    ports:
+      # - 7000:7000
+      - 7001:7001
+      - 7199:7199
+      - 9042:9042
+    volumes:
+      - cassdata:/var/lib/cassandra/data
+
+  postgres_jupyter:
+    build:
+    context: .
+    dockerfile: Dockerfile.dev
+    container_name: jupyter
+    ports:
+      - "8888:8888"
+    depends_on:
+      - cassandra
+
+
+    volumes:
+      - ../../:/hamidadesokan/src
+      - vscode-extensions:/root/.vscode-server/extensions
+    command: sleep infinity
+
+volumes:
+  cassdata:
+  vscode-extensions:
