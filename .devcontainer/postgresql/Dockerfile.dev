@@ -7,6 +7,6 @@ RUN --mount=type=cache,target=/root/.cache \
     conda install -c anaconda psycopg2 && \
     conda install -c conda-forge python-duckdb && \
     conda install -c conda-forge dask && \
-    ./install-packages.sh
+    install-packages.sh
     # python3 -m pip install duckdb
     # python3 -m pip install "dask[complete]"
