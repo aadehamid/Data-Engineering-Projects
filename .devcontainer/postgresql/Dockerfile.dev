@@ -1,12 +1,13 @@
 FROM jupyter/base-notebook
 WORKDIR /src/notebooks
 COPY ./requirements.txt .
+COPY ./install-packages.sh .
 RUN --mount=type=cache,target=/root/.cache \
     python3 -m pip install -r requirements.txt && \
-# RUN python3 -m pip install -r requirements.txt && \
     conda install -c anaconda psycopg2 && \
     conda install -c conda-forge python-duckdb && \
-    conda install -c conda-forge dask && \
-    install-packages.sh
+    conda install -c conda-forge dask
     # python3 -m pip install duckdb
     # python3 -m pip install "dask[complete]"
+# RUN python3 -m pip install -r requirements.txt && \
+RUN install-packages.sh
