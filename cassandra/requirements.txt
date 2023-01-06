@@ -24,3 +24,5 @@ lineapy
 # %pip install -q whylogs
 whylogs[viz]
 # --------------------
+sh
+pysnooper
