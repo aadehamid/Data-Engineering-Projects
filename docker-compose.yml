@@ -1,4 +1,19 @@
 services:
+
+  postgresql:
+    image: postgres
+    container_name: posgresql_db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: aadehamid
+      POSTGRES_DB: default_db
+    ports:
+      - "5432:5432"
+    init: true
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
   cassandra:
     image: cassandra
     container_name: cassandra_db
@@ -11,27 +26,27 @@ services:
     init: true
     volumes:
       - cassdata:/var/lib/cassandra/data
-      - /var/run/docker.sock:/var/run/docker.sock
+
 
   jupyter:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     container_name: jupyter
     ports:
       - "8888:8888"
     depends_on:
       - cassandra
+      - postgresql
 
     init: true
     volumes:
       # - ../../:/hamidadesokan/src
-      - ../../:/hamidadesokan/src
-      - vscode-extensions:/root/.vscode-server/extensions
-      - /var/run/docker.sock:/var/run/docker.sock
+      - .:/hamidadesokan/src
+
 
     command: sleep infinity
 
 volumes:
   cassdata:
-  vscode-extensions:
+  pgdata:
