@@ -1,6 +1,6 @@
 FROM jupyter/base-notebook
 WORKDIR /hamidadesokan/src
-COPY ../requirements.txt .
+COPY ./requirements.txt .
 COPY ./install-packages.sh .
 USER root
 RUN --mount=type=cache,target=/root/.cache \
