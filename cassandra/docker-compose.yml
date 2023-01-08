@@ -11,7 +11,7 @@ services:
     volumes:
       - cassdata:/var/lib/cassandra/data
 
-  postgres_jupyter:
+  jupyter:
     build: .
     container_name: jupyter
     ports:
@@ -21,7 +21,7 @@ services:
 
 
     volumes:
-      - ./python_postgres/python_scripts:/hamidadesokan/src
+      - .:/hamidadesokan/src
 
 volumes:
   cassdata:
