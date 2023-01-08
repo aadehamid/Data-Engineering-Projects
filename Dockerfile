@@ -11,4 +11,4 @@ RUN --mount=type=cache,target=/root/.cache \
     conda install -c conda-forge dask &&   \
     conda install -c anaconda ipykernel
 
-RUN install-packages.sh
+RUN ./install-packages.sh
