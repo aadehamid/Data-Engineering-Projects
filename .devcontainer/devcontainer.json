@@ -2,7 +2,7 @@
     "name": "Cassandra DB",
     "dockerComposeFile": "./docker-compose.dev-container.yml",
     "service": "jupyter",
-    "runServices": ["cassandra", "posgresql"],
+    "runServices": ["cassandra", "postgresql"],
     "shutdownAction": "stopCompose",
     /* Open the sub-folder with the source code */
     "workspaceFolder": "/workspaces/Data-Engineering-Projects",
