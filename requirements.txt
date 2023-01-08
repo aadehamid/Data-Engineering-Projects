@@ -16,3 +16,13 @@ polars
 pyspark
 plotly
 dash
+# libarries to review
+python-benedict
+fugue-jupyter
+fugue[sql]
+lineapy
+# %pip install -q whylogs
+whylogs[viz]
+# --------------------
+sh
+pysnooper
