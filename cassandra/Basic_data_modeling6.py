@@ -40,16 +40,9 @@ for root, dirs, files in os.walk(filepath):
 #     print(file_path_list)
 
 
-# In[3]:
-
-
-
-# !ls ./event_data
-
-
 # #### Processing the files to create the data file csv that will be used for Apache Casssandra tables
 
-# In[4]:
+# In[3]:
 
 
 # initiating an empty list of rows that will be generated from each file
@@ -87,7 +80,7 @@ with open('event_datafile_new.csv', 'w', encoding = 'utf8', newline='') as f:
         writer.writerow((row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[12], row[13], row[16]))
 
 
-# In[5]:
+# In[4]:
 
 
 # check the number of rows in your csv file
@@ -115,7 +108,7 @@ with open('event_datafile_new.csv', 'r', encoding = 'utf8') as f:
 # 
 # <img src="images/image_event_datafile_new.jpg">
 
-# In[6]:
+# In[5]:
 
 
 # It is difficult to explore the data in the csv format
@@ -129,7 +122,7 @@ df = pd.read_csv('event_datafile_new.csv')
 
 # #### Creating a Cluster
 
-# In[7]:
+# In[6]:
 
 
 # This should make a connection to a Cassandra instance your local machine 
@@ -144,7 +137,7 @@ session = cluster.connect()
 
 # #### Create Keyspace
 
-# In[8]:
+# In[7]:
 
 
 # TO-DO: Create a Keyspace 
@@ -162,10 +155,10 @@ except Exception as e:
 
 # #### Set Keyspace
 
-# In[9]:
+# In[8]:
 
 
-# TO-DO: Set KEYSPACE to the keyspace specified above
+# Set KEYSPACE to the keyspace specified above
 session.set_keyspace('musicshop')
 
 
@@ -186,14 +179,6 @@ session.set_keyspace('musicshop')
 
 # ### Create table for query 1
 
-# In[21]:
-
-
-# session.execute("drop table music_by_userId")
-# session.execute("drop table music_by_sessionID")
-# session.execute("drop table music_by_song")
-
-
 # **Solution for query 1**
 # - I used a pandas dataframe to load the data because it is simpler and easy to see what is going on. he csvreade code snippet provided if loading wrong data into the DB
 # 
@@ -204,17 +189,14 @@ session.set_keyspace('musicshop')
 
 # #### create the table - music_by_sessionID-  for query 1
 
-# In[11]:
+# In[9]:
 
 
 query1 = """
-        CREATE TABLE music_by_sessionID (artist text, itemInSession int, 
-        length float,
-        sessionId int, song text, 
+        CREATE TABLE music_by_sessionID (sessionId int, itemInSession int, artist text, 
+        length float, song text, 
         PRIMARY KEY ((sessionId), itemInSession))
 """
-
-# table_1_Cols = """(artist,  itemInSession, length, sessionId, song)"""
 
 try:
     session.execute(query1)
@@ -224,24 +206,24 @@ except Exception as e:
 
 # ####  create a dataframe for the data to insert into music_by_sessionID
 
-# In[12]:
+# In[10]:
 
 
-df_music_by_sessionID = df.loc[:, ['artist',
-                                   'itemInSession', 'length', 'sessionId', 'song']].copy()
+df_music_by_sessionID = df.loc[:, ['sessionId', 'itemInSession', 'artist',
+                                    'length', 'song']].copy()
 
 # load the above dataframe into music_by_sessionID Cassandra table
 query = """insert into music_by_sessionID 
-    (artist,  itemInSession, length, sessionId, song) VALUES (%s, %s, %s, %s, %s)"""
+    (sessionId, itemInSession, artist, length, song) VALUES (%s, %s, %s, %s, %s)"""
 for index, row in df_music_by_sessionID.iterrows():
     
-    session.execute(query, (row.artist, row.itemInSession, row.length, 
-                    row.sessionId, row.song))
+    session.execute(query, (row.sessionId, row.itemInSession, row.artist,  row.length, 
+                     row.song))
 
 
 # #### Do a SELECT to verify that the data have been inserted into each table
 
-# In[13]:
+# In[11]:
 
 
 query = """
@@ -261,24 +243,22 @@ for row in rows:
 # - I used a pandas dataframe to load the data because it is simpler and easy to see what is going on. he csvreade code snippet provided if loading wrong data into the DB
 # 
 # - The partition key for the data is (userId, sessionId)
-# - The clustering keys are itemInSession, firstName, lastName
+# - The clustering keys are itemInSession
 # - the columns used in the table are: ('artist', 'firstName',  'itemInSession', 'lastName','sessionId', 'song', 'userId')
 # - I used WITH CLUSTERING ORDER BY (itemInSession ASC)
 # 
 # 
 
-# In[14]:
+# In[12]:
 
 
 query2 = """
-        CREATE TABLE music_by_userId (artist text, firstName text, 
-        itemInSession int, lastName text, sessionId int, song text, userId int,
-        PRIMARY KEY ((userId, sessionId), itemInSession, firstName, lastName)) 
-        WITH CLUSTERING ORDER BY (itemInSession ASC)
+        CREATE TABLE music_by_userId (userId int, sessionId int, itemInSession int, 
+        firstName text, lastName text,artist text,  song text,
+        PRIMARY KEY ((userId, sessionId), itemInSession)) 
+        WITH CLUSTERING ORDER BY (itemInSession DESC)
 """
-# query_2_Cols = """(artist, firstName,  
-# itemInSession, lastName,sessionId, song, userId)
-# """
+
 try:
     session.execute(query2)
 except Exception as e:
@@ -287,26 +267,30 @@ except Exception as e:
 
 # ####  create a dataframe for the data to insert into music_by_userId
 
-# In[15]:
+# In[16]:
 
 
-table_2_Cols = ['artist', 'firstName',  
-'itemInSession', 'lastName','sessionId', 'song', 'userId']
+table_2_Cols = ['userId', 'sessionId', 'itemInSession', 'firstName',  
+'lastName', 'artist', 'song']
 df_music_by_userId= df.loc[:, table_2_Cols].copy()
 
 # load the above dataframe into music_by_sessionID Cassandra table
 query = """insert into music_by_userId 
-    (artist,  firstName, itemInSession, lastName, sessionId,
-    song, userId) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+    (userId, sessionId, itemInSession, firstName, lastName, artist,song) \
+    VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+
 for index, row in df_music_by_userId.iterrows():
+    table2_data = (row.userId, row.sessionId, row.itemInSession, 
+                   row.firstName, row.lastName, row.artist,  row.song)
     
-    session.execute(query, (row.artist, row.firstName, row.itemInSession, 
-                    row.lastName, row.sessionId, row.song, row.userId))
+    session.execute(query, table2_data)
+    
+    
 
 
 # #### Do a SELECT to verify that the data have been inserted into each table
 
-# In[16]:
+# In[19]:
 
 
 query = """
@@ -332,17 +316,13 @@ for row in rows:
 # 
 # 
 
-# In[22]:
+# In[20]:
 
 
 query3 = """
-        CREATE TABLE music_by_song ( firstName text, 
-       lastName text,  song text, userID int, PRIMARY KEY ((song), userId))
+        CREATE TABLE music_by_song ( song text, userID int, firstName text, 
+       lastName text, PRIMARY KEY ((song), userId))
 """
-
-# query_3_Cols = ['firstName', 'lastName', 'song']
-
-
 
 try:
     session.execute(query3)
@@ -352,24 +332,24 @@ except Exception as e:
 
 # ####  create a dataframe for the data to insert into music_by_userId
 
-# In[24]:
+# In[21]:
 
 
-table_3_Cols = ['firstName', 'lastName', 'song', 'userId']
+table_3_Cols = ['song', 'userId', 'firstName', 'lastName']
 df_music_by_song = df.loc[:, table_3_Cols].copy()
 
 # load the above dataframe into music_by_sessionID Cassandra table
 query = """insert into music_by_song 
-    (firstName, lastName, song, userId) VALUES (%s, %s, %s, %s)"""
+    (song, userId, firstName, lastName) VALUES (%s, %s, %s, %s)"""
 for index, row in df_music_by_userId.iterrows():
     
-    session.execute(query, (row.firstName, row.lastName,row.song, row.userId))
+    session.execute(query, (row.song, row.userId, row.firstName, row.lastName))
     
 
 
 # #### Do a SELECT to verify that the data have been inserted into each table
 
-# In[25]:
+# In[22]:
 
 
 query = """
@@ -383,115 +363,35 @@ for row in rows:
     print(row)
 
 
-# In[1]:
-
-
-## TO-DO: Query 1:  Give me the artist, song title and song's length in the music app history that was heard during \
-## sessionId = 338, and itemInSession = 4
-
-
-                    
-
-
-# In[ ]:
-
-
-# # We have provided part of the code to set up the CSV file. Please complete the Apache Cassandra code below#
-
-# file = 'event_datafile_new.csv'
-
-# with open(file, encoding = 'utf8') as f:
-#     csvreader = csv.reader(f)
-#     next(csvreader) # skip header
-#     for line in csvreader:
-# ## TO-DO: Assign the INSERT statements into the `query` variable
-#         query = "<ENTER INSERT STATEMENT HERE>"
-#         query = query + "<ASSIGN VALUES HERE>"
-#         ## TO-DO: Assign which column element should be assigned for 
-#         ## each column in the INSERT statement.
-#         ## For e.g., to INSERT artist_name and user first_name, 
-#         ## you would change the code below to `line[0], line[1]`
-#         session.execute(query, (line[#], line[#]))
-            
-
-
-# #### Do a SELECT to verify that the data have been inserted into each table
-
-# In[ ]:
-
-
-# ## TO-DO: Add in the SELECT statement to verify the data was entered into the table
-
-# query = """
-#         select * from music_library where sessionId = 338 and itemInSession = 4
-
-# """
-
-
-# ### COPY AND REPEAT THE ABOVE THREE CELLS FOR EACH OF THE THREE QUESTIONS
-
-# In[ ]:
-
-
-## TO-DO: Query 2: Give me only the following: name of artist, song (sorted by itemInSession) and user (first and last name)\
-## for userid = 10, sessionid = 182
-
-
-                    
-
-
-# In[ ]:
-
-
-## TO-DO: Query 3: Give me every user name (first and last) in my music app history who listened to the song 'All Hands Against His Own'
-
-
-                    
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
 # ### Drop the tables before closing out the sessions
 
-# In[4]:
+# In[23]:
 
 
-## TO-DO: Drop the table before closing out the sessions
-
-
-# In[ ]:
-
-
-
+## Drop the table before closing out the sessions
+try:
+    
+    session.execute("drop table music_by_userId")
+except Exception as e:
+    print(e)
+    
+try:
+    session.execute("drop table music_by_sessionID")
+except Exception as e:
+    print(e)
+    
+try:
+    session.execute("drop table music_by_song")
+except Exception as e:
+    print(e)
 
 
 # ### Close the session and cluster connection¶
 
-# In[26]:
+# In[24]:
+
 
 
 session.shutdown()
 cluster.shutdown()
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
 
